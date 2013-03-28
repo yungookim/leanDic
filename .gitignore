@@ -8,6 +8,7 @@ lib-cov
 *.gz
 
 wikitionary_dump.xml
+enwiktionary-20120606-pages-articles.xml
 
 pids
 logs
