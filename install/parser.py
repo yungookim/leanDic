@@ -1,29 +1,58 @@
-#!/usr/bin/python
+import page_parser
+import re
+import xapian
 import sys
-from wiktionary_parser.xml_parser import XMLPageParser
-from wiktionary_parser.languages.simple.page import simplePage
 
-if (len(sys.argv) != 2):
-	print "Input data dump file"
-	sys.exit()
+# Open the database for update, creating a new database if necessary.
+db = xapian.WritableDatabase(sys.argv[1], xapian.DB_CREATE_OR_OPEN)
+doc = xapian.Document()
+LINENO = 0
+#stemmer = xapian.Stem("english")
+#indexer.set_stemmer(stemmer)
+
+REG=re.compile('^[a-zA-Z0-9 \.]+$')
+#f = open('dump','w+')
+def split(str, num):
+  return [ str[start:start+num] for start in range(0, len(str), num) ]
+
+def yourCallback(pg):
+  global LINENO
+  title = pg.title.encode('ascii', 'ignore')
+  text = pg.text.encode('ascii', 'ignore')
+  if(REG.match(title)):
+#    f.write("\n<=Title=>\n" + title + "\n<=/Title=>")
+#    f.write("\n<=Text=>\n" + text + "\n<=/Text=>")
+    doc.add_value(0, title);
+    doc.add_value(1, text);
+
+    # add ngram terms
+    terms = split(title, 3)
+    for term in terms:
+      doc.add_term(term);
+
+    text = re.sub(r'\W+', '', text)
+    terms = split(text, 3)
+    for term in terms:      
+      doc.add_term(term)
+
+    doc.add_term(title)
+    db.add_document(doc)
+    doc.clear_terms()
+    doc.clear_values()
+
+    LINENO = LINENO + 1
+    if(LINENO % 1000 == 0):
+     db.commit();
+
+  else:
+    print "NOWRITE"
+  print pg
 
 
-xml_file = open(sys.argv[1])
-xml_parser = XMLPageParser(xml_file, simplePage)
-from itertools import islice
 
-# 3575190
-pages = list(islice(xml_parser, 3575190))
 
-f = open('dump','w+')
+if len(sys.argv) != 2:
+    print >> sys.stderr, "Usage: %s PATH_TO_DATABASE" % sys.argv[0]
+    sys.exit(1)
 
-for pg in pages:
-	title = pg.title.encode('ascii', 'ignore')
-	text = pg.text.encode('ascii', 'ignore')
-	f.write("\n<=Title=>" + title)
-	f.write("\n<=Text=>" + text) 
-	# print pg.discriminator
-	# print pg.language
-	# print pg.revision_id
-	# pg.parse()
-		
+page_parser.parseWithCallback("enwiktionary-20120606-pages-articles.xml", yourCallback)

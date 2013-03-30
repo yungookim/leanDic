@@ -6,7 +6,7 @@ lib-cov
 *.out
 *.pid
 *.gz
-
+index/
 wikitionary_dump.xml
 enwiktionary-20120606-pages-articles.xml
 
