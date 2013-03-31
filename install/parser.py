@@ -12,26 +12,29 @@ LINENO = 0
 
 REG=re.compile('^[a-zA-Z0-9 \.]+$')
 #f = open('dump','w+')
-def split(str, num):
-  return [ str[start:start+num] for start in range(0, len(str), num) ]
+def ngrams(tokens):
+  n_tokens = len(tokens)
+  _list = []
+  for i in xrange(n_tokens):
+    for j in xrange(i+3, min(n_tokens, i+3)+1):
+      _list.append(tokens[i:j])
+  return _list
 
 def yourCallback(pg):
   global LINENO
   title = pg.title.encode('ascii', 'ignore')
   text = pg.text.encode('ascii', 'ignore')
   if(REG.match(title)):
-#    f.write("\n<=Title=>\n" + title + "\n<=/Title=>")
-#    f.write("\n<=Text=>\n" + text + "\n<=/Text=>")
     doc.add_value(0, title);
     doc.add_value(1, text);
 
     # add ngram terms
-    terms = split(title, 3)
+    terms = ngrams(title)
     for term in terms:
       doc.add_term(term);
 
     text = re.sub(r'\W+', '', text)
-    terms = split(text, 3)
+    terms = ngrams(text)
     for term in terms:      
       doc.add_term(term)
 
@@ -42,13 +45,13 @@ def yourCallback(pg):
 
     LINENO = LINENO + 1
     if(LINENO % 1000 == 0):
+     print "commit", LINENO
      db.commit();
 
   else:
-    print "NOWRITE"
-  print pg
-
-
+    pass
+#    print "NOWRITE"
+#  print pg
 
 
 if len(sys.argv) != 2:

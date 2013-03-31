@@ -1,0 +1,22 @@
+{
+  "name": "node_starter_pack",
+  "author": {
+    "name": "KimY",
+  },
+  "version": "0.0.1",
+  "private" : true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:yungookim/node_starter_pack.git"
+  },
+  "engines": {
+    "node": ">= 0.8.9",
+    "npm": ">= 1.1.x"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "nconf" : "0.6.x",
+    "pg" : "0.12.x",
+    "underscore" : "1.4.x"
+  }
+}

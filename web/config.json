@@ -1,0 +1,7 @@
+{
+	"port" : 8080,
+	"pg_user" : "user",
+	"pg_pw" : "pw",
+	"pg_db" : "db",
+	"pg_host" : "localhost"
+}

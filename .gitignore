@@ -6,7 +6,9 @@ lib-cov
 *.out
 *.pid
 *.gz
+*.pyc
 index/
+index_new/
 wikitionary_dump.xml
 enwiktionary-20120606-pages-articles.xml
 
