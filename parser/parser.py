@@ -4,6 +4,8 @@ import sys
 import glob
 import os
 
+pattern = re.compile('([^\s\w]|_)+')
+
 def ngrams(tokens):
 	n_tokens = len(tokens)
 	_list = []
@@ -26,7 +28,7 @@ def index_files(file_list):
 
 		#add terms to index
 		doc.add_term(title)
-		_text = re.sub(r'\W+', '', text)
+		_text = pattern.sub('', text)
 		terms = _text.split(' ')
 		for term in terms:
 			doc.add_term(term.lower())
