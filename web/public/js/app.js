@@ -5,7 +5,6 @@ $(function(){
   window.loadTemplate(function(){
     $(window).load(function(){
       // Make sure all the external libraries are loaded
-      // And finally, load up the youtube api lib
       window.app = new AppRouter;
       Backbone.history.start();
     });
@@ -19,7 +18,8 @@ var AppRouter = Backbone.Router.extend({
   },
 
   landing : function(){
-    
+    window.searchCollection = new SearchCollection();
+    (new SearchView({ collection : searchCollection }));
   },
   
   defaultAction : function(){
@@ -29,7 +29,7 @@ var AppRouter = Backbone.Router.extend({
 
 window.loadTemplate = function(next){
   window.Templates = window.Templates || {};
-  var templateList = ['example'];
+  var templateList = ['searchResult'];
   _.each(templateList, function(name){
     $.get('templates/' + name + '.html', function(data) {
       window.Templates[name] = data;

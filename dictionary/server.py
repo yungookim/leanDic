@@ -25,7 +25,7 @@ class search:
 		query_string = token + " " + " ".join(ngram)
 		print ngram, token
 		
-		 # Parse the query string to produce a Xapian::Query object.
+		# Parse the query string to produce a Xapian::Query object.
 		qp = xapian.QueryParser()
 		qp.set_database(database)
 		query = qp.parse_query(query_string)

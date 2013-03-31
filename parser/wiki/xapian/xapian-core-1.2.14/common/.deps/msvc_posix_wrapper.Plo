@@ -1,0 +1,3 @@
+common/msvc_posix_wrapper.lo: common/msvc_posix_wrapper.cc config.h
+
+config.h:

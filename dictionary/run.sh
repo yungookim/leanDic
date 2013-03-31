@@ -1,1 +1,1 @@
-python server.py 8080
+nohup python server.py 8081&
