@@ -20,7 +20,7 @@ def index_files(file_list):
 		f = open(_file, 'r')
 		category = os.path.basename(os.path.dirname(_file))
 		title = os.path.splitext(os.path.basename(_file))[0]
-		text = f.read()
+		text = f.read().lower()
 		
 		doc.add_value(0, category)
 		doc.add_value(1, title)
@@ -31,7 +31,10 @@ def index_files(file_list):
 		_text = pattern.sub('', text)
 		terms = _text.split(' ')
 		for term in terms:
-			doc.add_term(term.lower())
+			t = term.lower().strip()
+			if len(t) > 0:
+				doc.add_term(t)
+				print t
 
 		title_ngrams = ngrams(title)
 		txt_ngrams = ngrams(text)

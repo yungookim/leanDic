@@ -36,9 +36,10 @@ class search:
 		for m in matches:
 			rank = m.rank
 			percent = m.percent
-			title = m.document.get_value(0)
-			text = m.document.get_value(1)
-			data = { 'rank' : rank, 'percent' : percent, 'title' : title, 'text' : text}
+			category = m.document.get_value(0)
+			title = m.document.get_value(1)
+			text = m.document.get_value(2)
+			data = { 'rank' : rank, 'percent' : percent, 'title' : title, 'category' : category, 'text' : text}
 			out.append(data)
 		return json.dumps(out)
 
