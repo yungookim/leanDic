@@ -6,7 +6,6 @@ window.SearchView = Backbone.View.extend({
   },
 
   initialize: function() {
-    var self = this;    
   },
 
   render: function(eventName) {
@@ -18,11 +17,10 @@ window.SearchView = Backbone.View.extend({
   },
 
   search : function(){
+    console.log("Searching");
     var token = $("#search_token").val();
     var self = this;
     this.collection.search(token, function(ret){
-//      console.log(ret);
-//	console.log(txtwiki.parseWikitext(ret[0].text))
       self.render();
     });
   }

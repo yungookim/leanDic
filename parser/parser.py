@@ -3,6 +3,7 @@ import xapian
 import sys
 import glob
 import os
+import fnmatch
 
 pattern = re.compile('([^\s\w]|_)+')
 
@@ -25,16 +26,16 @@ def index_files(file_list):
 		doc.add_value(0, category)
 		doc.add_value(1, title)
 		doc.add_value(2, text)
+		doc.add_value(3, _file)
 
 		#add terms to index
 		doc.add_term(title)
 		_text = pattern.sub('', text)
 		terms = _text.split(' ')
 		for term in terms:
-			t = term.lower().strip()
-			if len(t) > 0:
+			t = term.lower()
+			if len(t) > 0 and len(t) < 50 :
 				doc.add_term(t)
-				print t
 
 		title_ngrams = ngrams(title)
 		txt_ngrams = ngrams(text)
@@ -50,7 +51,7 @@ def index_files(file_list):
 		doc.clear_values()
 
 		LINENO += 1
-		if (LINENO % 10000 == 0):
+		if (LINENO % 1000 == 0):
 			print "commit", LINENO
 			db.commit()
 
@@ -63,5 +64,12 @@ db = xapian.WritableDatabase(sys.argv[1], xapian.DB_CREATE_OR_OPEN)
 doc = xapian.Document()
 LINENO = 0
 
-file_list = glob.glob('/home/kimy/OANC/data/written_2/technical/911report/*.txt')
+file_list = []
+for root, dirnames, filenames in os.walk('/home/kimy/OANC/data/'):
+	for filename in fnmatch.filter(filenames, '*.txt'):
+		file_list.append(os.path.join(root, filename))
 index_files(file_list)
+#commit any remaining documents
+db.commit()
+
+#file_list = glob.glob('/home/kimy/OANC/data/written_2/technical/911report/*.txt')

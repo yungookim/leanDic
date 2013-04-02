@@ -2,7 +2,7 @@
 var express = require('express')
   , app     = express()
   , nconf   = require('nconf')
-  ,_        = require('underscore');
+  , _        = require('underscore');
 
 //Load configuration hierarch
 nconf.env().argv().file(__dirname + '/config.json');

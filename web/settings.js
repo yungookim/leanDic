@@ -10,7 +10,6 @@ var logFile = fs.createWriteStream('./express.log', {flags: 'w'});
 		// app.use(express.bodyParser());
 		// app.use(express.bodyParser({ uploadDir :__dirname + '/uploads' }));
 		app.use(express.methodOverride());
-		app.use(app.router);
 		app.use(express.logger());
 		app.use(express.compress());
 		app.use(express.logger({stream: logFile}));

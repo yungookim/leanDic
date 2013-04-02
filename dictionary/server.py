@@ -4,10 +4,11 @@ import xapian
 import json
 
 urls = (
-    '/(.*)', 'search'
+    '/search/(.*)', 'search',
+    '/docid/(.*)', 'doc'
 )
 
-database = xapian.Database('./index_new')
+database = xapian.Database('./index')
 app = web.application(urls, globals())
 
 def ngrams(tokens):
@@ -39,9 +40,14 @@ class search:
 			category = m.document.get_value(0)
 			title = m.document.get_value(1)
 			text = m.document.get_value(2)
-			data = { 'rank' : rank, 'percent' : percent, 'title' : title, 'category' : category, 'text' : text}
+			data = { 'rank' : rank, 'percent' : percent, 'title' : title, 'category' : category, 'docid' : m.docid}
 			out.append(data)
 		return json.dumps(out)
 
+class doc:
+	def GET(self, docid):
+		doc = database.get_document(int(docid))
+		return doc.get_value(2)
+		
 if __name__ == "__main__":
 	app.run()

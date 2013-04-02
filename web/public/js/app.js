@@ -18,8 +18,7 @@ var AppRouter = Backbone.Router.extend({
   },
 
   landing : function(){
-    window.searchCollection = new SearchCollection();
-    (new SearchView({ collection : searchCollection }));
+    (new SearchView({ collection : new SearchCollection() }));
   },
   
   defaultAction : function(){
