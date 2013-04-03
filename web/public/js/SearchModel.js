@@ -6,8 +6,8 @@ window.SearchModel = Backbone.Model.extend({
     var self = this;
     $.get('/docid/' + this.get('docid'), function(ret){
       //TODO check for status code
-      ret = ret.replace(/(\n)+/g, '\n')
-      ret = ret.replace(/\n/g, "<br>")
+      ret = ret.replace(/(\s)+/g, ' ');
+      ret = ret.replace(/\n/g, "<br>");
       self.set('text', ret);
     });
   }
