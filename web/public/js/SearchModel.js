@@ -15,6 +15,7 @@ window.SearchModel = Backbone.Model.extend({
 
 window.SearchCollection = Backbone.Collection.extend({
   model : SearchModel,
+  dictionary : [],
   initialize : function(){
     this.comparator = function(m){
       m.get('rank');
@@ -31,5 +32,19 @@ window.SearchCollection = Backbone.Collection.extend({
       
       next();
     });
+  },
+
+  build_dictionary : function(next){
+    var self = this;
+    _.each(self.models, function(model){
+      var tokens = model.get('text').replace(/[^a-zA-Z ]/g,'').split(' ');
+      _.each(tokens, function(token){
+        if (token.length < 3) {return;}
+        if(_.indexOf(self.dictionary, token) == -1){
+          self.dictionary.push(token);
+        }
+      });
+    });
+    next();
   }
 });

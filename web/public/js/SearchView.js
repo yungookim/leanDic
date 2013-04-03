@@ -4,7 +4,9 @@ window.SearchView = Backbone.View.extend({
   tokens : "",
   events : {
     "click #search_btn" : "search",
-    "click #highlight_btn" : "highlight"
+    "click #highlight_btn" : "highlight",
+    "click #highlight_ngram_btn" : "highlight_ngram",
+    "click #make_dictionary_btn" : "show_dictionary"
   },
 
   initialize: function() {
@@ -23,14 +25,15 @@ window.SearchView = Backbone.View.extend({
     var self = this;
     var txt_elements = $('.text');
     var tokens = self.tokens.split(' ');
-    var mark_s = " <span class=\"text-error\">";
+    var mark_s = " <span class=\"label label-success match\">";
     var mark_e = "</span> ";
     _.each(txt_elements, function(ele){
     	_.each(tokens, function(token){
-          $(ele).html($(ele).html().replace(' ' +  token + ' ', mark_s + token + mark_e));
-          ngram(token);
+          var text = $(ele).html();
+          $(ele).html(text.replace(' ' +  token + ' ', mark_s + token + mark_e));
         });
     });
+    $("#numb_matching").html($('.match').length);
   },
 
   search : function(){
@@ -39,6 +42,23 @@ window.SearchView = Backbone.View.extend({
     self.tokens = token;
     this.collection.search(token, function(ret){
       self.render();
+    });
+  },
+
+  highlight_ngram : function(){
+    var list = ngram(token);
+    var txt_elements = $('.text');
+    var tokens = self.tokens.split(' ');
+    var mark_s = " <span class=\"label label-warning n_match\">";
+    var mark_e = "</span> ";
+
+    
+  },
+
+  show_dictionary : function(){
+    var self = this;
+    this.collection.build_dictionary(function(){
+      $('#dictionary_size').html(self.collection.dictionary.length);
     });
   }
 });
