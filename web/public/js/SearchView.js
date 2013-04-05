@@ -46,19 +46,30 @@ window.SearchView = Backbone.View.extend({
   },
 
   highlight_ngram : function(){
-    var list = ngram(token);
+    var self = this;
     var txt_elements = $('.text');
-    var tokens = self.tokens.split(' ');
+    var query_tokens = self.tokens.split(' ');
     var mark_s = " <span class=\"label label-warning n_match\">";
     var mark_e = "</span> ";
 
-    
+    //Get list of the words associated with the ngrams of the querying token
+    _.each(query_tokens, function(query_token){
+      var ngrams = ngram(query_token);
+      var results = [];
+      _.each(ngrams, function(gram){
+        results = results.concat(self.collection.dictionary[gram]);
+      });
+      ngram_dic = flatten(results);
+    }); 
   },
 
   show_dictionary : function(){
     var self = this;
     this.collection.build_dictionary(function(){
-      $('#dictionary_size').html(self.collection.dictionary.length);
+      $('#dictionary_size').html(self.collection.numb_words);
+      $('#ngram_size').html(_.size(self.collection.dictionary));
+      window.dic = self.collection.dictionary;
+      console.log(self.collection.dictionary);
     });
   }
 });
@@ -76,4 +87,8 @@ var ngram = function(token){
     } 
   }
   return list;
+}
+
+var ngram_dic = function(list){
+
 }

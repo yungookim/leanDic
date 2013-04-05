@@ -15,7 +15,8 @@ window.SearchModel = Backbone.Model.extend({
 
 window.SearchCollection = Backbone.Collection.extend({
   model : SearchModel,
-  dictionary : [],
+  dictionary : {},
+  numb_words : 0,
   initialize : function(){
     this.comparator = function(m){
       m.get('rank');
@@ -29,7 +30,6 @@ window.SearchCollection = Backbone.Collection.extend({
       _.each(ret, function(ele){
         self.push(ele);
       });
-      
       next();
     });
   },
@@ -40,9 +40,18 @@ window.SearchCollection = Backbone.Collection.extend({
       var tokens = model.get('text').replace(/[^a-zA-Z ]/g,'').split(' ');
       _.each(tokens, function(token){
         if (token.length < 3) {return;}
-        if(_.indexOf(self.dictionary, token) == -1){
-          self.dictionary.push(token);
-        }
+        var trigrams = ngram(token);
+        _.each(trigrams, function(gram){
+          if (_.has(self.dictionary, gram)){
+            if (_.indexOf(self.dictionary[gram], token) == -1){
+              self.dictionary[gram].push(token);
+              self.numb_words++;
+            }
+          } else {
+            self.dictionary[gram] = [token];
+            self.numb_words++;
+          }
+        });
       });
     });
     next();
