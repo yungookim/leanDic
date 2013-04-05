@@ -6,6 +6,7 @@ window.SearchView = Backbone.View.extend({
     "click #search_btn" : "search",
     "click #highlight_btn" : "highlight",
     "click #highlight_ngram_btn" : "highlight_ngram",
+    "click #highlight_ngram_reduced_btn" : "highlight_reduced_ngram",
     "click #make_dictionary_btn" : "show_dictionary"
   },
 
@@ -46,7 +47,11 @@ window.SearchView = Backbone.View.extend({
     });
   },
 
-  highlight_ngram : function(){
+  highlight_reduced_ngram : function(){
+    this.highlight_ngram(true);
+  },
+
+  highlight_ngram : function(evnt, reduce){
     var self = this;
     self.render();
     var query_tokens = self.tokens.split(' ');
@@ -63,17 +68,23 @@ window.SearchView = Backbone.View.extend({
       //Ignore tokens with less than 2 occurance from the overall texts
       for (var k in ngram_dic){
         // TODO : This can be improved for more precise highlighting
-        if (ngram_dic[k] > 1){
+        if (reduce){
+          if (ngram_dic[k] > 1 || _.size(ngram_dic) == 1){
+            final_dic.push(k);
+          }
+        } else {
           final_dic.push(k);
         }
       }
     }); 
+    console.log(final_dic);
+    console.log(final_dic.length);
     //Start highlighting
     var txt_elements = $('.text');
     var mark_s = " <span class=\"label label-warning n_match\">";
     var mark_e = "</span> ";
     _.each(txt_elements, function(ele){
-    	_.each(query_tokens, function(token){
+    	_.each(final_dic, function(token){
           var text = $(ele).html();
           $(ele).html(text.replace(' ' +  token + ' ', mark_s + token + mark_e));
         });
