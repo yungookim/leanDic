@@ -23,7 +23,6 @@ window.SearchView = Backbone.View.extend({
 
   highlight : function(){
     var self = this;
-    self.render();
     var txt_elements = $('.text');
     var tokens = self.tokens.split(' ');
     var mark_s = " <span class=\"label label-success match\">";
@@ -48,10 +47,11 @@ window.SearchView = Backbone.View.extend({
 
   highlight_ngram : function(){
     var self = this;
-    self.render();
+    var txt_elements = $('.text');
     var query_tokens = self.tokens.split(' ');
-    var ngram_dic;
-    var final_dic = [];
+    var mark_s = " <span class=\"label label-warning n_match\">";
+    var mark_e = "</span> ";
+
     //Get list of the words associated with the ngrams of the querying token
     _.each(query_tokens, function(query_token){
       var ngrams = ngram(query_token);
@@ -60,24 +60,7 @@ window.SearchView = Backbone.View.extend({
         results = results.concat(self.collection.dictionary[gram]);
       });
       ngram_dic = flatten(results);
-      //Ignore tokens with less than 2 occurance from the overall texts
-      for (var k in ngram_dic){
-        // TODO : This can be improved for more precise highlighting
-        if (ngram_dic[k] > 1){
-          final_dic.push(k);
-        }
-      }
     }); 
-    //Start highlighting
-    var txt_elements = $('.text');
-    var mark_s = " <span class=\"label label-warning n_match\">";
-    var mark_e = "</span> ";
-    _.each(txt_elements, function(ele){
-    	_.each(query_tokens, function(token){
-          var text = $(ele).html();
-          $(ele).html(text.replace(' ' +  token + ' ', mark_s + token + mark_e));
-        });
-    });
   },
 
   show_dictionary : function(){
@@ -106,16 +89,6 @@ var ngram = function(token){
   return list;
 }
 
-//Given the list of all the words from ngram dictionary, 
-//return the list of words with with high occurance from the query string
 var flatten = function(list){
-  var _obj = {};
-  _.each(list, function(each){
-    if(_obj[each]){ _obj[each]++;}
-    else{_obj[each] = 1;}
-  });
-  _.sortBy(_obj, function(val){
-    return val;
-  });
-  return _obj;
+
 }

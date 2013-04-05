@@ -15,14 +15,12 @@
       </div>
       <div class="row">
         <div class="span12">
-          <input id="ngram_min" type="text" class="input-medium" style="margin-top:10px;" placeholder="min ngram highlighting"/>
-          <input id="ngram_max" type="text" class="input-medium" style="margin-top:10px;" placeholder="max ngram highlighting"/>
           <button id="highlight_btn" class="btn">Highlight Matchings</button>
-          <button id="make_dictionary_btn" class="btn">Create ngram hash</button>
-          <button id="highlight_ngram_btn" class="btn">Highlight Ngram Matchings</button>
+          <button id="make_dictionary_btn" class="btn">Create trigram hash</button>
+          <button id="highlight_ngram_btn" class="btn">Highlight trigram Matchings</button>
         </div>
       </div>
-      <div class="row">
+      <div class="row" style="margin-top:25px";>
         Number of matching tokens : <span id="numb_matching"></span><br>
         Size of dictionary : <span id="dictionary_size"></span><br>
         Size of N-gram hash : <span id="ngram_size"></span>
